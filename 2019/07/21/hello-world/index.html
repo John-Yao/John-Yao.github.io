@@ -123,10 +123,6 @@
         </div>
         
         
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
-            <i class="icon icon-lg icon-share-alt"></i>
-        </a>
-        
     </div>
 </header>
 <header class="content-header post-header">
@@ -224,51 +220,6 @@
             
 
             
-<div class="page-share-wrap">
-    
-
-<div class="page-share" id="pageShare">
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/07/21/hello-world/&title=《Hello World》 — Hexo&pic=http://yoursite.com/img/avatar1.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/07/21/hello-world/&title=《Hello World》 — Hexo&source=" data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/07/21/hello-world/" data-title=" Facebook">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hello World》 — Hexo&url=http://yoursite.com/2019/07/21/hello-world/&via=http://yoursite.com" data-title=" Twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/07/21/hello-world/" data-title=" Google+">
-          <i class="icon icon-google-plus"></i>
-        </a>
-      </li>
-    </ul>
- </div>
-
-
-
-    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
-        <i class="icon icon-share-alt icon-lg"></i>
-    </a>
-</div>
-
 
 
         </div>
@@ -294,6 +245,30 @@
 
 
 
+
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+        var id = location.pathname
+        if (location.pathname.length > 50) {
+          id = location.pathname.replace(/\/\d+\/\d+\/\d+\//, '').replace('/', '').substring(0, 50)
+        }
+        const gitalk = new Gitalk({
+          clientID: '73f1167eceabe84ca65c',
+          clientSecret: '30228e09e86db4724cc172fcf844a2d8434c5cf5',
+          repo: 'John-Yao.github.io',
+          owner: 'John-Yao',
+          admin: ['John-Yao'],
+          id: id,      // Ensure uniqueness and length less than 50
+          title: document.title.split('|')[0],
+          distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
 
 
 
@@ -337,55 +312,9 @@
 <a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
 
 
-
-<div class="global-share" id="globalShare">
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/07/21/hello-world/&title=《Hello World》 — Hexo&pic=http://yoursite.com/img/avatar1.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/07/21/hello-world/&title=《Hello World》 — Hexo&source=" data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/07/21/hello-world/" data-title=" Facebook">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hello World》 — Hexo&url=http://yoursite.com/2019/07/21/hello-world/&via=http://yoursite.com" data-title=" Twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/07/21/hello-world/" data-title=" Google+">
-          <i class="icon icon-google-plus"></i>
-        </a>
-      </li>
-    </ul>
- </div>
-
-
-<div class="page-modal wx-share" id="wxShare">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3azW4CMQxFYd7/padSt5T0XDsjID5ZoQJhvi4s/z0e+Fy/Z/361bvPZ/3d579vOzJkyPhaxrU8/DPrO2//XRkyZAxgkCBLHmt9Jwnf5B4ZMmTI4Cng+iF4CObpowwZMmSkYZFg0r/IkCFDRqeI7XTAePp4ey0uQ4aML2TsGgzc8foN8w0ZMmR8GOMKzzo5qzXO0iD7x1PJkCHjaEangCQw/t1OuilDhoxpjDTkdUIwH5SippsMGTIOZXQWHfqfJMEXNexkyJAxgEGGkWk5mgZovoQhQ4aMaYw0sePrYp0RabqOJkOGjDkM/hB8DLD+yXSxjN8sQ4aM8xhpMVkLvneMQmXIkDGNkbbDSKDsfIuPK2TIkHE2oxba0pEnWZ6oDRJkyJAxgcHL17Q9x9v6nZpbhgwZ0xhpC4wH0E6pnJbNMmTIOI9BliF4kUne7QTlf4pYGTJkHMrgCRlP2tJwiUpTENBlyJBxNmP9Zd6Aqy2Z1VJMGTJkzGHUlifSIWUn1KJ/hwwZMkYyeEnJk8LaQXfKkCHjaAZJy2rLFvzmNFkMUkwZMmQcwbjCkza/SHLJBxIv75chQ8bRjDRFSxcv+PpFrZEnQ4aMOQy+jFXbNeMNOF4qB/WuDBkyDmJ0hojpUkVcVYPEUYYMGTLSYcDeYWeQGsqQIUNGOykkQblYSMuQIWMAgxexafu+NU3lJa4MGTKOZnQGA7WkcNfvbr5OhgwZn8j4AVMxhJq3J5WuAAAAAElFTkSuQmCC" alt="微信分享二维码">
-</div>
-
-
-
-
     <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
 <script>
-var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
 
 
 </script>
