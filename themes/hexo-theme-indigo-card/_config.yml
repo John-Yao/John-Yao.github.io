@@ -9,7 +9,7 @@
 #    target: _blank    是否跳出，省略则在当前页面打开
 menu:
   home:
-    text: Main page
+    text: Main
     url: /
   archives:
     url: /archives
@@ -29,7 +29,7 @@ menu:
   #   url: /custom
 
 # 你的头像url
-avatar: /img/avatar1.jpg
+avatar: /img/avatar_cat.jpg
 # avatar link
 avatar_link: /
 # 头像背景图
