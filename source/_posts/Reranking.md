@@ -98,9 +98,9 @@ ps: 其实个人理解使用修改后的方案（k-reciprocal feature），还�
 
 reranking 主要有3个参数： k1=20, k2=6, lambda_value=0.3
 
-k1是计算k-reciprocal nearest neighbor的k，不宜过大，特别是存在大量只有一张图片的ID时
+k1是计算k-reciprocal nearest neighbor的k，不宜过大，特别是存在大量只有几张图片的ID时
 
-k2是计算Local Query Expansion的k, 不宜过大，特别是存在大量只有一张图片的ID时，而且一般比k1小
+k2是计算Local Query Expansion的k, 不宜过大，特别是存在大量只有几张图片的ID时，而且一般比k1小
 
 
 
