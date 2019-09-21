@@ -81,3 +81,11 @@ deploy:
   type: git 
   repository: git@github.com:John-Yao/John-Yao.github.io
   branch: master
+
+# # math
+# math:
+#   engine: 'mathjax' # or 'katex'
+#   mathjax:
+#     # src: custom_mathjax_source
+#     config:
+#       # MathJax config

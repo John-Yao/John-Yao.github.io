@@ -61,15 +61,15 @@ Reference:
 
 重新计算距离矩阵的复杂度为
 $$
-O((N+M)^2*k*k)
+O((N+M)^2kk)
 $$
 N,M分别为probes, galleries的图片数量
 
 计算expanded k-reciprocalnearest neightbors的时间复杂度为：
 $$
-O((N+M)*(D*(N+M)+(N+M)+k*log(N+M)+k*k/2*log(N+M)))
+O((N+M)(D(N+M)+(N+M)+klog(N+M)+kk/2log(N+M)))
 $$
-其中, D为feature的长度，(N+M)是建堆的时间复杂度，k*log(N+M)是topk的查询复杂度，k*k/2*log(N+M))是expand的时间复杂度。
+其中, D为feature的长度，(N+M)是建堆的时间复杂度，kxlog(N+M)是topk的查询复杂度，kxk/2xlog(N+M))是expand的时间复杂度。
 
 ps: 其实个人理解使用修改后的方案（k-reciprocal feature），还是要计算expanded k-reciprocalnearest neightbors，所以k-reciprocal feature并不是针对这点提出的改进。
 
@@ -101,3 +101,6 @@ reranking 主要有3个参数： k1=20, k2=6, lambda_value=0.3
 k1是计算k-reciprocal nearest neighbor的k，不宜过大，特别是存在大量只有一张图片的ID时
 
 k2是计算Local Query Expansion的k, 不宜过大，特别是存在大量只有一张图片的ID时，而且一般比k1小
+
+
+
