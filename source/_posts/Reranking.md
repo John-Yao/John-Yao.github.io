@@ -37,17 +37,21 @@ Reference:
 
 ​	回顾常规检索过程，probe(p)在galleries检索的topk({g1,g2,..,}),定义为：
 
+```
+{% asset_img top_k.png This is an example image %}
+```
+
 ![](Reranking/top_k.png)
 
 ​	k-reciprocal nearest neighbors定义为：
 
-![](k-reciprocal.png)
+![](Reranking/k-reciprocal.png)
 
 ​	probe(p)在**probes+galleries**检索的topk的candidates对象（不包含p），如果这些candidates对象在**probes+galleries**选泽的topk包含了p,则该candidate与p互为top-k。
 
 ​	有时候probe的匹配图片不在probe的top-k之中，这时候使用下面的方法进行召回：
 
-![](k-reciprocal-expand.png)
+![](Reranking/k-reciprocal-expand.png)
 
 ​	简单的解释就是，对任一q属于k-reciprocal nearest neightbors, 求R(q,k/2)； 若R(q,k/2)与R(p,k)的交集数量大于2/3的|R(q,k/2)|，则将R(q,k/2)合并到R(p,k)，得到expanded k-reciprocalnearest neightbors.
 
