@@ -77,7 +77,7 @@ ps: 其实个人理解使用修改后的方案（k-reciprocal feature），还�
 
 考虑将k-reciprocal nearest neighbor编码为向量，称为k-reciprocal feature
 
-## k-reciprocal feature
+### k-reciprocal feature
 
 ![](Reranking/Vp.png)
 
@@ -88,7 +88,7 @@ ps: 其实个人理解使用修改后的方案（k-reciprocal feature），还�
 ![](Reranking/weight-V.png)
   其中公式（8）（9）可以这样理解，对于一个向量，按元素操作，0和非零值取min代表着交集，0和非零值取max 代表着并集，其一阶范数代表这集合得大小。
 
-## Local Query Expansion
+### Local Query Expansion
 
 假设相同ID的图片拥有相似的特征，因此可以使用probe的topk对Vp进行修正，注意top-k应该包含了p：
 
