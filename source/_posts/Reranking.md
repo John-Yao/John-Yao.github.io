@@ -35,13 +35,7 @@ Reference:
 
 ### K-reciprocal Nearest Neighbors
 
-​	回顾常规检索过程，probe(p)在galleries检索的topk({g1,g2,..,}),定义为：
-
-```
-{% asset_img top_k.png This is an example image %}
-```
-
-![](Reranking/top_k.png)
+​	回顾常规检索过程，probe(p)在galleries检索的topk({g1,g2,..,}),定义为：![](Reranking/top_k.png)
 
 ​	k-reciprocal nearest neighbors定义为：
 
