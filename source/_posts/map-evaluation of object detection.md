@@ -80,11 +80,11 @@ note:
 
  假设从测试集中共检测出20个例子，而测试集中共有6个正例，则PR表如下： 
 
-<img src="mAP/PR_table.png" style="zoom:50%;" />
+![](mAP/PR_table.png)
 
 PR波形图如下
 
-<img src="mAP/PR_curve.png" style="zoom:67%;" />
+![](mAP/PR_curve.png)
 
 ## Code
 
