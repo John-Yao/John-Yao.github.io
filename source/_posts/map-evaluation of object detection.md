@@ -80,7 +80,7 @@ note:
 
  假设从测试集中共检测出20个例子，而测试集中共有6个正例，则PR表如下： 
 
-![](map-evaluation of object detection/PR_table.png)
+<img src="map-evaluation of object detection/PR_table.png" style="zoom:100%;" />
 
 PR波形图如下
 
