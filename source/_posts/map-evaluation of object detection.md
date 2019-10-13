@@ -76,6 +76,16 @@ note:
 
 ​	precision的最大值体现在如果只是简单取recall阈值下的precision那么绘制出来的PR曲线并不是单调递减的。	举例来说tps为 [0,1,0,1,1]，则累加后为：[0,1,1,2,3]，precisions为：[0,1/2,1/3/，2/4，3/5]，可以看到precision可能是波动的，PR曲线并不是单调递减的，通过平滑处理，可以保证PR曲线的单调性，有利于观察PR曲线选择合适的score阈值。
 
+#### 参考第2个链接的例子理解上述过程：
+
+ 假设从测试集中共检测出20个例子，而测试集中共有6个正例，则PR表如下： 
+
+<img src="mAP/PR_table.png" style="zoom:50%;" />
+
+PR波形图如下
+
+<img src="mAP/PR_curve.png" style="zoom:67%;" />
+
 ## Code
 
 pseudo code：给出一张图片，一个类别时的AP伪代码
