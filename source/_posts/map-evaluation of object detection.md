@@ -25,7 +25,7 @@ Reference:
 
 ## Approach Description
 
-### mAP定义集相关概率
+### mAP定义集相关概念
 
 - mAP: mean Average Precision, 即各类别AP的平均值
 - AP: PR曲线下的面积
