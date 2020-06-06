@@ -1,7 +1,7 @@
 ---
 title: Data Augmentations in Image Classification
 date: 2020-04-30 17:10:04
-tags:Image Classification, Data Augmentation
+tags: Image Classification, Data Augmentation
 categories: Image Classification
 ---
 
