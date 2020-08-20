@@ -1,7 +1,6 @@
 ---
 title: Aboutme
 date: 2020-08-21 00:34:12
-tags:
 ---
 
 My main research includes object detection, multi-object tracking, image retrieval, pedestrian reidentification. I also achieve some top rank of CVPR, ICCV and Tianchi. 
