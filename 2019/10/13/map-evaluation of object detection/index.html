@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>Anlysis and implementation of mAP-evaluation of object detection | John-Yao&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Ojbect_Detection">
+    <meta name="description" content="Abstract​     目标检测中衡量识别精度的常用指标是mAP（mean average precision）。多个类别物体检测中，每一个类别都可以根据recall和precision绘制一条曲线，AP就是该曲线下的面积，mAP是多个类别AP的平均值 。 InformationCode:   https://github.com/cocodataset/cocoapi/blob/master">
+<meta name="keywords" content="Ojbect_Detection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Anlysis and implementation of mAP-evaluation of object detection">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/map-evaluation of object detection/index.html">
+<meta property="og:site_name" content="John-Yao&#39;s Blog">
+<meta property="og:description" content="Abstract​     目标检测中衡量识别精度的常用指标是mAP（mean average precision）。多个类别物体检测中，每一个类别都可以根据recall和precision绘制一条曲线，AP就是该曲线下的面积，mAP是多个类别AP的平均值 。 InformationCode:   https://github.com/cocodataset/cocoapi/blob/master">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/2019/10/13/map-evaluation%20of%20object%20detection/PR_table.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/13/map-evaluation%20of%20object%20detection/PR_curve.png">
+<meta property="og:updated_time" content="2020-08-20T13:26:34.654Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Anlysis and implementation of mAP-evaluation of object detection">
+<meta name="twitter:description" content="Abstract​     目标检测中衡量识别精度的常用指标是mAP（mean average precision）。多个类别物体检测中，每一个类别都可以根据recall和precision绘制一条曲线，AP就是该曲线下的面积，mAP是多个类别AP的平均值 。 InformationCode:   https://github.com/cocodataset/cocoapi/blob/master">
+<meta name="twitter:image" content="http://yoursite.com/2019/10/13/map-evaluation%20of%20object%20detection/PR_table.png">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar_cat.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Yao</h5>
+          <a href="mailto:" class="mail"></a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Main
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/John-Yao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Anlysis and implementation of mAP-evaluation of object detection</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Anlysis and implementation of mAP-evaluation of object detection</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-10-13T06:40:27.000Z" itemprop="datePublished" class="page-time">
+  2019-10-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Ojbect-Detection/">Ojbect_Detection</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Abstract"><span class="post-toc-number">1.</span> <span class="post-toc-text">Abstract</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Information"><span class="post-toc-number">2.</span> <span class="post-toc-text">Information</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Approach-Description"><span class="post-toc-number">3.</span> <span class="post-toc-text">Approach Description</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#mAP定义集相关概念"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">mAP定义集相关概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#mAP的计算方法"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">mAP的计算方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#参考第2个链接的例子理解上述过程："><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">参考第2个链接的例子理解上述过程：</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Code"><span class="post-toc-number">4.</span> <span class="post-toc-text">Code</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Extension"><span class="post-toc-number">5.</span> <span class="post-toc-text">Extension:</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-map-evaluation of object detection"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Anlysis and implementation of mAP-evaluation of object detection</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-10-13 14:40:27" datetime="2019-10-13T06:40:27.000Z"  itemprop="datePublished">2019-10-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Ojbect-Detection/">Ojbect_Detection</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>​     目标检测中衡量识别精度的常用指标是mAP（mean average precision）。多个类别物体检测中，每一个类别都可以根据recall和precision绘制一条曲线，AP就是该曲线下的面积，mAP是多个类别AP的平均值 。</p>
+<h2 id="Information"><a href="#Information" class="headerlink" title="Information"></a>Information</h2><p>Code: </p>
+<ul>
+<li><a href="https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocotools/cocoeval.py" target="_blank" rel="noopener">https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocotools/cocoeval.py</a> </li>
+<li><a href="https://github.com/rbgirshick/py-faster-rcnn/blob/master/lib/datasets/voc_eval.py" target="_blank" rel="noopener">https://github.com/rbgirshick/py-faster-rcnn/blob/master/lib/datasets/voc_eval.py</a> </li>
+</ul>
+<p>Reference:</p>
+<ul>
+<li>目标检测中的mAP是什么含义？ - Wentao的回答 - 知乎<br><a href="https://www.zhihu.com/question/53405779/answer/419532990" target="_blank" rel="noopener">https://www.zhihu.com/question/53405779/answer/419532990</a></li>
+<li>ROC，AUC，PR，AP介绍及python绘制 <a href="https://www.cnblogs.com/zf-blog/p/6734686.html" target="_blank" rel="noopener">https://www.cnblogs.com/zf-blog/p/6734686.html</a> </li>
+<li><a href="https://link.zhihu.com/?target=http%3A//host.robots.ox.ac.uk/pascal/VOC/voc2012/htmldoc/devkit_doc.html%23SECTION00044000000000000000" target="_blank" rel="noopener">The PASCAL Visual Object Classes Challenge 2012 (VOC2012) Development Kit</a></li>
+<li>用mAP衡量目标检测的性能是否科学？ - Angzz的回答 - 知乎 <a href="https://www.zhihu.com/question/337856533/answer/769453722" target="_blank" rel="noopener">https://www.zhihu.com/question/337856533/answer/769453722</a> </li>
+</ul>
+<h2 id="Approach-Description"><a href="#Approach-Description" class="headerlink" title="Approach Description"></a>Approach Description</h2><h3 id="mAP定义集相关概念"><a href="#mAP定义集相关概念" class="headerlink" title="mAP定义集相关概念"></a>mAP定义集相关概念</h3><ul>
+<li>mAP: mean Average Precision, 即各类别AP的平均值</li>
+<li>AP: PR曲线下的面积</li>
+<li>PR曲线: Precision-Recall曲线</li>
+<li>Precision: TP / (TP + FP)</li>
+<li>Recall: TP / (TP + FN)</li>
+<li>TP: IoU&gt;0.5的检测框数量（同一Ground Truth只计算一次）</li>
+<li>FP: IoU&lt;=0.5的检测框，或者是检测到同一个GT的<strong>多余</strong>检测框的数量 （ps:多余的意思是指对一个gt预测出多个框的iou大于阈值，只考虑最大iou的 检测框）</li>
+<li>FN: 没有检测到的GT的数量</li>
+</ul>
+<h4 id="mAP的计算方法"><a href="#mAP的计算方法" class="headerlink" title="mAP的计算方法"></a>mAP的计算方法</h4><p>​    要计算mAP必须先绘出各类别PR曲线，通过对PR曲线的面积统计得出AP。</p>
+<p>​        <strong>如何采样PR曲线</strong>，VOC，COCO都采用过下面几种不同方法。</p>
+<ul>
+<li><p>在VOC2010以前，只需要选取当Recall &gt;= 0, 0.1, 0.2, …, 1共11个点时的<strong>Precision最大值</strong>，然后AP就是这11个Precision的平均值。</p>
+</li>
+<li><p>在VOC2010及以后， 假设设这一张图片M个正例，那么我们会得到M个recall值（1/M, 2/M, …, M/M）,对于每个recall值r，我们可以计算出对应（r’ &gt; r）的最大precision，然后对这M个precision值取平均即得到最后的AP值。 </p>
+</li>
+<li><p>COCO(pycocotools) 选取当Recall &gt;= 0, 0.01, 0.02, …, 1共101个点时的Precision最大值，然后AP就是这101个Precision的平均值。 </p>
+</li>
+</ul>
+<p>  <strong>如何计算Precision, Recall</strong>:</p>
+<p>  根据Precision的定义需要确定TP、FP、FN的值，那么如何确定这些值并且和设定recall阈值对应起来呢？</p>
+<ol>
+<li><p>确定iou_thres(0.5)，将pred_boxes按score排序，<strong>相同imageID</strong>下，将pred_boxes 和gt_boxes进行匹配：</p>
+<ul>
+<li><p>(method1) 对每个gt_box 计算与未被匹配的pred_boxes的iou，取最大iou的pred_box，若iou&gt;iou_thres则该pred_box置为TP,否则为FP</p>
+</li>
+<li><p>(method2，voc)对每个pred_box 计算与gt_boxes的iou,取最大iou的gt_box，若iou&gt;iou_thres且该gt_box未被匹配则将该pred_box置为TP，否则为FP</p>
+<p>经过上述方法可以得到长度为len(pred_boxes)的tps/fps数组，可以用1代表对应位置为TP/FP</p>
+</li>
+</ul>
+</li>
+<li><p>对tps，fps分别进行累加，得到累加数组，第i个元素代表在第i个pred_boxes的score划分正负样本时，TP和FP的值（ps：只考虑了预测为正样本部分），于是可以得到不同score下的Precision，Recall的值，分别记为precisions,recalls。Recall的分母为len(gt_boxes)</p>
+</li>
+<li><p><strong>平滑处理</strong>：</p>
+<ol>
+<li>对precisions的每个元素，取当前位置后面所有precision的最大值</li>
+</ol>
+</li>
+<li><p>根据确定的Recall threshold找到其在Recall的位置，并确定其precision值，相邻的recall相减并与precision值相乘，所有乘积之和就是ap</p>
+</li>
+</ol>
+<p>note: </p>
+<p>​    precision的最大值体现在如果只是简单取recall阈值下的precision那么绘制出来的PR曲线并不是单调递减的。    举例来说tps为 [0,1,0,1,1]，则累加后为：[0,1,1,2,3]，precisions为：[0,1/2,1/3/，2/4，3/5]，可以看到precision可能是波动的，PR曲线并不是单调递减的，通过平滑处理，可以保证PR曲线的单调性，有利于观察PR曲线选择合适的score阈值。</p>
+<h4 id="参考第2个链接的例子理解上述过程："><a href="#参考第2个链接的例子理解上述过程：" class="headerlink" title="参考第2个链接的例子理解上述过程："></a>参考第2个链接的例子理解上述过程：</h4><p> 假设从测试集中共检测出20个例子，而测试集中共有6个正例，则PR表如下： </p>
+<img src="/2019/10/13/map-evaluation of object detection/PR_table.png" style="zoom:100%;">
+
+<p>PR波形图如下</p>
+<img src="/2019/10/13/map-evaluation of object detection/PR_curve.png" style="zoom:80%;">
+
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>pseudo code：给出一张图片，一个类别时的AP伪代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line"># Box = Tuple[int, int, int, int]</span><br><span class="line"># [left, top, right, bottom]</span><br><span class="line"></span><br><span class="line">def IoU(box1:Box, box2:Box) -&gt; float:</span><br><span class="line">    pass</span><br><span class="line">    </span><br><span class="line">def AP(boxes:List[Box], gt_boxes:List[Box], thres:float) -&gt; float:</span><br><span class="line">    N = len(boxes)</span><br><span class="line">    M = len(gt_boxes)</span><br><span class="line">    pred_match = [0 for i in range(N)]</span><br><span class="line">    for i in range(M):</span><br><span class="line">        max_id = 0</span><br><span class="line">        max_iou = 0</span><br><span class="line">        for j in range(N):</span><br><span class="line">            if pred_match[j]==0:</span><br><span class="line">               iou = IoU(gt_boxes[i],boxes[j]) </span><br><span class="line">               if iou&gt;thres:</span><br><span class="line">                   if iou&gt;max_iou:</span><br><span class="line">                       max_id = j</span><br><span class="line">                       max_iou = iou</span><br><span class="line">       pred_match[max_id] = i+1</span><br><span class="line">   precisions = []</span><br><span class="line">   # recalls = []</span><br><span class="line">   tp = 0</span><br><span class="line">   for i in range(N):</span><br><span class="line">       if pred_match[i]!=0:</span><br><span class="line">           tp += (pred_match[i]!=0)</span><br><span class="line">           fp = N-tp</span><br><span class="line">           recall = tp/M</span><br><span class="line">           precision = tp/(i+1)</span><br><span class="line">           # recalls.append(recall)</span><br><span class="line">           precisions.append(precision)</span><br><span class="line">    # smooth</span><br><span class="line">    precisions = [0.0]+precisions+[0.0]</span><br><span class="line">    for i in range(len(precisions)-1,0,-1):</span><br><span class="line">        precisions[i-1] = max(precisions[i-1],precisions[i])</span><br><span class="line"></span><br><span class="line">    precisions = precisions[1:-1]</span><br><span class="line">    ap = [precisions[i]*1/M for i in range(len(precisions))]</span><br><span class="line">    ap = sum(ap)</span><br><span class="line">    </span><br><span class="line">    return ap</span><br></pre></td></tr></table></figure>
+
+<h2 id="Extension"><a href="#Extension" class="headerlink" title="Extension:"></a>Extension:</h2><p>​    在训练好detection model，可以通过softnms，多尺度测试，flip测试增强等trick提升mAP, 但是基本都是通过提升recall，涨的低Precision的区域，低精度区对应用场景来说没用 。</p>
+<p>​    实际应用中可以使用FPPI(False Positve Per Image), MISS Rate(行人检测常用)</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-08-20T13:26:34.654Z" itemprop="dateUpdated">2020-08-20 21:26:34</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2019/10/13/map-evaluation of object detection/" target="_blank" rel="external">http://yoursite.com/2019/10/13/map-evaluation of object detection/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar_cat.jpg" alt="John Yao">
+            John Yao
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ojbect-Detection/">Ojbect_Detection</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/04/30/Data-Augmentations-in-Image-Classification/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Data Augmentations in Image Classification</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2019/09/18/Reranking/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Reranking</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+        var id = location.pathname
+        if (location.pathname.length > 50) {
+          id = location.pathname.replace(/\/\d+\/\d+\/\d+\//, '').replace('/', '').substring(0, 50)
+        }
+        const gitalk = new Gitalk({
+          clientID: '73f1167eceabe84ca65c',
+          clientSecret: '30228e09e86db4724cc172fcf844a2d8434c5cf5',
+          repo: 'John-Yao.github.io',
+          owner: 'John-Yao',
+          admin: ['John-Yao'],
+          id: id,      // Ensure uniqueness and length less than 50
+          title: document.title.split('|')[0],
+          distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>John Yao &copy; 2019 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>

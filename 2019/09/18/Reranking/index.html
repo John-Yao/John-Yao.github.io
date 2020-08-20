@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>Reranking | John-Yao&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="ReID">
+    <meta name="description" content="Abstract​        在图像检索过程中，或者ReID(将 Re-ID看作一个检索过程时)，re-ranking是提高其准确性的关键步骤，是各大竞赛刷榜得利器。 ​        Re-Ranking的思想基于这么一个假设： ​        if a gallery image is similar to the probe in the k-reciprocal nearest ne">
+<meta name="keywords" content="ReID">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reranking">
+<meta property="og:url" content="http://yoursite.com/2019/09/18/Reranking/index.html">
+<meta property="og:site_name" content="John-Yao&#39;s Blog">
+<meta property="og:description" content="Abstract​        在图像检索过程中，或者ReID(将 Re-ID看作一个检索过程时)，re-ranking是提高其准确性的关键步骤，是各大竞赛刷榜得利器。 ​        Re-Ranking的思想基于这么一个假设： ​        if a gallery image is similar to the probe in the k-reciprocal nearest ne">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/top-k.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/k-reciprocal.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/k-reciprocal-expand.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/Jaccard-distance.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/Vp.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/weight-V.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/18/Reranking/local-query-expansion.png">
+<meta property="og:updated_time" content="2020-08-20T13:26:34.649Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Reranking">
+<meta name="twitter:description" content="Abstract​        在图像检索过程中，或者ReID(将 Re-ID看作一个检索过程时)，re-ranking是提高其准确性的关键步骤，是各大竞赛刷榜得利器。 ​        Re-Ranking的思想基于这么一个假设： ​        if a gallery image is similar to the probe in the k-reciprocal nearest ne">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/18/Reranking/top-k.png">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+
+</head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar_cat.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Yao</h5>
+          <a href="mailto:" class="mail"></a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Main
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/John-Yao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Reranking</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Reranking</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2019-09-17T16:40:27.000Z" itemprop="datePublished" class="page-time">
+  2019-09-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/ReID/">ReID</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Abstract"><span class="post-toc-number">1.</span> <span class="post-toc-text">Abstract</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Information"><span class="post-toc-number">2.</span> <span class="post-toc-text">Information</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Approach-Description"><span class="post-toc-number">3.</span> <span class="post-toc-text">Approach Description</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#K-reciprocal-Nearest-Neighbors"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">K-reciprocal Nearest Neighbors</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Jaccard-Distance"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">Jaccard Distance</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#k-reciprocal-feature"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">k-reciprocal feature</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Local-Query-Expansion"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">Local Query Expansion</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Code"><span class="post-toc-number">4.</span> <span class="post-toc-text">Code</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Reranking"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Reranking</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2019-09-18 00:40:27" datetime="2019-09-17T16:40:27.000Z"  itemprop="datePublished">2019-09-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/ReID/">ReID</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>​        在图像检索过程中，或者ReID(将 Re-ID看作一个检索过程时)，re-ranking是提高其准确性的关键步骤，是各大竞赛刷榜得利器。</p>
+<p>​        Re-Ranking的思想基于这么一个假设：</p>
+<p>​        <em>if a gallery image is similar to the probe in the k-reciprocal nearest neighbors, it is more likely to be a true match.</em></p>
+<p>​        简单的解释就是，根据probe在<strong>probes+galleries</strong>搜索出来的candidate对象，根据这些candidate对象在<strong>probes+galleries</strong>选择k个nearest，如果包含你的probe，那它的可能性更大一些。</p>
+<h2 id="Information"><a href="#Information" class="headerlink" title="Information"></a>Information</h2><p>Paper: (CVPR2017) Re-ranking Person Re-identification with k-reciprocal Encoding.</p>
+<p>Code: </p>
+<ul>
+<li>(matlab) <a href="https://github.com/zhunzhong07/person-re-ranking" target="_blank" rel="noopener">https://github.com/zhunzhong07/person-re-ranking</a></li>
+<li>(python cpu:代码简洁，使用堆排序加速，k reciprocal nearest neighbors没有去重)  <a href="https://github.com/layumi/Person_reID_baseline_pytorch/" target="_blank" rel="noopener">https://github.com/layumi/Person_reID_baseline_pytorch/</a></li>
+<li>(pytorch gpu) <a href="https://github.com/michuanhaohao/reid-strong-baseline" target="_blank" rel="noopener">https://github.com/michuanhaohao/reid-strong-baseline</a></li>
+</ul>
+<p>Reference:</p>
+<ul>
+<li><a href="https://blog.csdn.net/lwplwf/article/details/84862054" target="_blank" rel="noopener">https://blog.csdn.net/lwplwf/article/details/84862054</a></li>
+<li>谁能解释下 行人重识别reranking的原理？ - linolzhang的回答 - 知乎<br><a href="https://www.zhihu.com/question/271308170/answer/361943914" target="_blank" rel="noopener">https://www.zhihu.com/question/271308170/answer/361943914</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/36834023" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/36834023</a></li>
+</ul>
+<h2 id="Approach-Description"><a href="#Approach-Description" class="headerlink" title="Approach Description"></a>Approach Description</h2><h3 id="K-reciprocal-Nearest-Neighbors"><a href="#K-reciprocal-Nearest-Neighbors" class="headerlink" title="K-reciprocal Nearest Neighbors"></a>K-reciprocal Nearest Neighbors</h3><p>​    回顾常规检索过程，probe(p)在galleries检索的topk({g1,g2,..,}),定义为：<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/top-k.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>​    k-reciprocal nearest neighbors定义为：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/k-reciprocal.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>​    probe(p)在<strong>probes+galleries</strong>检索的topk的candidates对象（不包含p），如果这些candidates对象在<strong>probes+galleries</strong>选泽的topk包含了p,则该candidate与p互为top-k。</p>
+<p>​    有时候probe的匹配图片不在probe的top-k之中，这时候使用下面的方法进行召回：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/k-reciprocal-expand.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>​    简单的解释就是，对任一q属于k-reciprocal nearest neightbors, 求R(q,k/2)； 若R(q,k/2)与R(p,k)的交集数量大于2/3的|R(q,k/2)|，则将R(q,k/2)合并到R(p,k)，得到expanded k-reciprocalnearest neightbors.</p>
+<h3 id="Jaccard-Distance"><a href="#Jaccard-Distance" class="headerlink" title="Jaccard Distance"></a>Jaccard Distance</h3><p>​    若probe和gallery的两个图片的k-reciprocal nearest neighbor重叠的越多，可以认为两张图片越近似：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/Jaccard-distance.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>​    可以使用该距离做为<strong>新的度量方式</strong>，但是该方法存在几个缺点：</p>
+<p>（1）时间复杂度高：</p>
+<p>重新计算距离矩阵的复杂度为<br>$$<br>O((N+M)^2kk)<br>$$<br>N,M分别为probes, galleries的图片数量</p>
+<p>计算expanded k-reciprocalnearest neightbors的时间复杂度为：<br>$$<br>O((N+M)(D(N+M)+(N+M)+klog(N+M)+kk/2log(N+M)))<br>$$<br>其中, D为feature的长度，(N+M)是建堆的时间复杂度，kxlog(N+M)是topk的查询复杂度，kxk/2xlog(N+M))是expand的时间复杂度。</p>
+<p>ps: 其实个人理解使用修改后的方案（k-reciprocal feature），还是要计算expanded k-reciprocalnearest neightbors，所以k-reciprocal feature并不是针对这点提出的改进。</p>
+<p>（2）jaccard distance未考虑top-k中每张图片的权重，但显然排名高的图像权重应该更大</p>
+<p>考虑将k-reciprocal nearest neighbor编码为向量，称为k-reciprocal feature</p>
+<h3 id="k-reciprocal-feature"><a href="#k-reciprocal-feature" class="headerlink" title="k-reciprocal feature"></a>k-reciprocal feature</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/Vp.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>即对属于expand k-reciprocal nearest neighbor的编码为1，否则为0，长度为probes+galleries的长度.</p>
+<p>接下来，对编码为1的使用指数函数计算相似度：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/weight-V.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>  其中公式（8）（9）可以这样理解，对于一个向量，按元素操作，0和非零值取min代表着交集，0和非零值取max 代表着并集，其一阶范数代表这集合得大小。</p>
+<h3 id="Local-Query-Expansion"><a href="#Local-Query-Expansion" class="headerlink" title="Local Query Expansion"></a>Local Query Expansion</h3><p>假设相同ID的图片拥有相似的特征，因此可以使用probe的topk对Vp进行修正，注意top-k应该包含了p：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2019/09/18/Reranking/local-query-expansion.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>reranking 主要有3个参数： k1=20, k2=6, lambda_value=0.3</p>
+<p>k1是计算k-reciprocal nearest neighbor的k，不宜过大，特别是存在大量只有几张图片的ID时</p>
+<p>k2是计算Local Query Expansion的k, 不宜过大，特别是存在大量只有几张图片的ID时，而且一般比k1小</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-08-20T13:26:34.649Z" itemprop="dateUpdated">2020-08-20 21:26:34</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2019/09/18/Reranking/" target="_blank" rel="external">http://yoursite.com/2019/09/18/Reranking/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar_cat.jpg" alt="John Yao">
+            John Yao
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ReID/">ReID</a></li></ul>
+
+
+            
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/10/13/map-evaluation of object detection/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Anlysis and implementation of mAP-evaluation of object detection</h4>
+      </a>
+    </div>
+  
+
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="comments" id="comments">
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+        var id = location.pathname
+        if (location.pathname.length > 50) {
+          id = location.pathname.replace(/\/\d+\/\d+\/\d+\//, '').replace('/', '').substring(0, 50)
+        }
+        const gitalk = new Gitalk({
+          clientID: '73f1167eceabe84ca65c',
+          clientSecret: '30228e09e86db4724cc172fcf844a2d8434c5cf5',
+          repo: 'John-Yao.github.io',
+          owner: 'John-Yao',
+          admin: ['John-Yao'],
+          id: id,      // Ensure uniqueness and length less than 50
+          title: document.title.split('|')[0],
+          distractionFreeMode: false  // Facebook-like distraction free mode
+        })
+
+        gitalk.render('gitalk-container')
+    </script>
+</section>
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>John Yao &copy; 2019 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: false, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>
