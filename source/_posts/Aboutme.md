@@ -13,3 +13,6 @@ My main research includes object detection, multi-object tracking, image retriev
 
 ### Image Retrieval
 - August 17, 2020 [Gold medel of Google Landmark Retrieval](https://www.kaggle.com/c/landmark-retrieval-2020/leaderboard)
+
+### Object Detection
+- November 22, 2018 [天池-2018广东工业智造大数据创新大赛-第三名](https://tianchi.aliyun.com/competition/entrance/231682/rankingList)
